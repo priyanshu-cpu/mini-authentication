@@ -1,6 +1,6 @@
-def main():
-    print("Hello from auth!")
+from fastapi import FastAPI, HTTPException, Depends
 
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+
+app.include_router()
