@@ -8,3 +8,7 @@ wheels/
 
 # Virtual environments
 .venv
+.env
+__init__
+alembic
+alembic.ini
