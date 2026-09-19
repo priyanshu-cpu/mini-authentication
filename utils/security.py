@@ -1,10 +1,9 @@
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from settings import settings
+from utils.settings import settings
 from fastapi import HTTPException, Depends, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from settings import settings
 
 bearer_schema = HTTPBearer(bearerFormat="JWT")
 

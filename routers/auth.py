@@ -9,7 +9,7 @@ from models.user import User
 router = APIRouter(prefix="/auth")
 
 
-@router.post("/register")
+@router.post("/register", response_model=UserOut)
 def register_user(body: UserBase, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.name == body.username).first()
     if user is not None:
