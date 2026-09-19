@@ -23,7 +23,7 @@ def update_me(body: UserUpdate ,user:User = Depends(get_current_user), db:Sessio
         user.username = body.username
 
     if body.email is not None:
-        existing_email = db.query(user).filter(user.email == body.email, User.id == user.id).first()
+        existing_email = db.query(User).filter(User.email == body.email, User.id == user.id).first()
         if existing_email:
             raise HTTPException(status_code=409, detail="email already exists")
         user.email = body.email
@@ -35,6 +35,10 @@ def update_me(body: UserUpdate ,user:User = Depends(get_current_user), db:Sessio
     db.refresh(user)
     return user
 
-@router.delete("/me")
-def delete_me():
-    pass
+@router.delete("/me", status_code=204)
+def delete_me(db:Session = Depends(get_db), user:User = Depends(get_current_user)):
+    db.delete(user)
+    db.commit()
+    return{
+        "message" : "delete success"
+    }
