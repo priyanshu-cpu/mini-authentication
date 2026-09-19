@@ -8,10 +8,14 @@ class UserBase(BaseModel):
     password: str
 
 class UserOut(BaseModel):
+    id: int
     username: str
     email: str
 
 class UserLogin(BaseModel):
     username: str
     password: str
-    
+
+class UserCreateResponse(BaseModel):
+    message: str
+    data: UserOut

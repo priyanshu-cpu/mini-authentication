@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from utils.security import create_token, verify_password, get_password_hash
-from schemas.user import UserBase, UserLogin, UserOut
+from schemas.user import UserBase, UserLogin, UserCreateResponse
 from database import get_db
 from models.user import User
 
@@ -9,7 +9,7 @@ from models.user import User
 router = APIRouter(prefix="/auth")
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=UserCreateResponse)
 def register_user(body: UserBase, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == body.username).first()
     if user is not None:
@@ -20,7 +20,7 @@ def register_user(body: UserBase, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="email already exists!")
 
     hash_password = get_password_hash(body.password)
-    db_user = User(name = body.username,
+    db_user = User(username = body.username,
                 email = body.email,
                 hash_password = hash_password)
     db.add(db_user)
