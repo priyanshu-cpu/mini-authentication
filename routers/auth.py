@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from utils.security import create_token, verify_token, get_password_hash
+from utils.security import create_token, get_password_hash
 from schemas.user import UserBase, UserLogin, UserOut
 from database import get_db
 from models.user import User
@@ -20,9 +20,17 @@ def register_user(body: UserBase, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="email already exists!")
 
     hash_password = get_password_hash(body.password)
-    user = User(name = body.username,
+    db_user = User(name = body.username,
                 email = body.email,
                 hash_password = hash_password)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+
+    return {
+        "message" : "user created successfully",
+        "user" : db_user
+    }
 
 @router.post("/login")
 def login_user():
