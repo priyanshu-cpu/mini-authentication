@@ -1,5 +1,5 @@
 from jose import jwt, JWTError
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 from utils.settings import settings
 from fastapi import HTTPException, Depends, status
@@ -13,13 +13,13 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"}
 )
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")
+password_hash = PasswordHash.recommended()
 
 def get_password_hash(password: str):
-    return pwd_context.hash(password)
+    return password_hash.hash(password)
 
 def verify_password(plain_password: str, hash_password: str):
-    return pwd_context.verify(plain_password, hash_password)
+    return password_hash.verify(plain_password, hash_password)
 
 
 def create_token(data: dict):

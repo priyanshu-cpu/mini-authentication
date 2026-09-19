@@ -18,4 +18,4 @@ class UserLogin(BaseModel):
 
 class UserCreateResponse(BaseModel):
     message: str
-    data: UserOut
+    user: UserOut
