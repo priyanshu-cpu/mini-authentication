@@ -2,7 +2,17 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from settings import settings
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from settings import settings
 
+bearer_schema = HTTPBearer(bearerFormat="JWT")
+
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Invalid or expired token!",
+    headers={"WWW-Authenticate": "Bearer"}
+)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")
 
@@ -23,5 +33,11 @@ def create_token(data: dict):
     token = jwt.encode(to_encode, settings.SECRET_KEY, settings.ALGORITHM)
     return token
 
-def verify_token():
-    pass
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_schema)):
+    try:
+        payload = jwt.decode(credentials.credentials, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        if not payload.get("sub"):
+            raise credentials_exception
+        return payload
+    except JWTError:
+        raise credentials_exception
