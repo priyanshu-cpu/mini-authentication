@@ -22,7 +22,7 @@ def register_user(body: UserBase, db: Session = Depends(get_db)):
     hash_password = get_password_hash(body.password)
     db_user = User(username = body.username,
                 email = body.email,
-                hash_password = hash_password)
+                password_hash = hash_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
