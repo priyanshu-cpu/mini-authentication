@@ -4,5 +4,5 @@ from routers.user import router as user_router
 
 app = FastAPI()
 
-app.router(auth_router, tags =["Auth"])
-app.router(user_router, tags = ["User"])
+app.include_router(auth_router, tags =["Auth"])
+app.include_router(user_router, tags = ["User"])
