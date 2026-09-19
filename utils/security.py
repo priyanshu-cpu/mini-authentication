@@ -16,7 +16,7 @@ credentials_exception = HTTPException(
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated = "auto")
 
-def password_hash(password: str):
+def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hash_password: str):
