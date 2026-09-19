@@ -8,7 +8,6 @@ class UserBase(BaseModel):
     password: str
 
 class UserOut(BaseModel):
-    id: int
     username: str
     email: str
 
